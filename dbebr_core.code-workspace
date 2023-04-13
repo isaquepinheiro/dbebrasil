@@ -8,10 +8,6 @@
 			"name": "dbebr_postgres",
 			"path": "dbebr_postgres"
 		},
-		{
-			"name": "dbebr",
-			"path": "."
-		}
 	],
 	"settings": {}
 }
