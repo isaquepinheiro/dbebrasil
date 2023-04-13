@@ -1,5 +1,5 @@
-name: dbebr_postgres
-description: DBEBr Framwork for Dart/Flutter (PostgreSQL - package postgres)
+name: dbebr_mysql1
+description: DBEBr Framwork for Dart/Flutter (MySQL - package mysql1)
 version: 0.0.1
 homepage: https://github.com/isaquepinheiro
 publish_to: 'none'
@@ -11,8 +11,8 @@ environment:
 dependencies:
   dbebr_core:
     path: ../dbebr_core
-  postgres: ^2.6.1
   meta: ^1.9.1
+  mysql1: ^0.20.0
 
 dev_dependencies:
   lints: ^2.0.0
