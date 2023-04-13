@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"name": "dbebr_core",
+			"path": "dbebr_core"
+		},
+		{
+			"name": "dbebr_postgres",
+			"path": "dbebr_postgres"
+		},
+		{
+			"name": "dbebr",
+			"path": "."
+		}
+	],
+	"settings": {}
+}

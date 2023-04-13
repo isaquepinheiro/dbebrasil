@@ -1,0 +1,17 @@
+name: dbebr_core
+description: DBEBr Framework for Dart/Flutter (Core).
+version: 0.0.1
+homepage: https://www.isaquepinheiro.com.br
+publish_to: 'none'
+# repository: https://github.com/my_org/my_repo
+
+environment:
+  sdk: '>=2.19.5 <3.0.0'
+
+dependencies:
+  meta: ^1.9.1
+#   path: ^1.8.0
+
+dev_dependencies:
+  lints: ^2.0.0
+  test: ^1.21.0
