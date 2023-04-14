@@ -1,9 +1,8 @@
 name: dbebr_postgres
 description: DBEBr Framwork for Dart/Flutter (PostgreSQL - package postgres)
 version: 0.0.1
-homepage: https://github.com/isaquepinheiro
+repository: https://github.com/isaquepinheiro
 publish_to: 'none'
-# repository: https://github.com/my_org/my_repo
 
 environment:
   sdk: '>=2.19.5 <3.0.0'

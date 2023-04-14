@@ -8,28 +8,22 @@ class DriverMysql1Transaction extends DriverTransaction {
     required this.factoryConnection,
   });
   late final FactoryMysql1 factoryConnection;
-  late final TransactionContext _transaction;
-  bool _inTransaction = false;
+  late TransactionContext? _transaction;
 
-  TransactionContext get transaction => _transaction;
+  TransactionContext? get transaction => _transaction;
 
   @override
   void commitTransaction() {
-    if (!_inTransaction) {
-      // _transaction.cancelTransaction();
-      _inTransaction = false;
-    }
+    _transaction = null;
   }
 
   @override
-  bool isInTransaction() => _inTransaction;
+  bool isInTransaction() => _transaction != null;
 
   @override
   void rollbackTransaction() {
-    if (!_inTransaction) {
-      // _transaction.cancelTransaction();
-      _inTransaction = false;
-    }
+    _transaction?.rollback();
+    _transaction = null;
   }
 
   @override
@@ -37,6 +31,9 @@ class DriverMysql1Transaction extends DriverTransaction {
     factoryConnection.connection.transaction((final transaction) async {
       _transaction = transaction;
     });
-    _inTransaction = true;
+  }
+
+  Future<void> execute(final String command) async {
+    await _transaction?.query(command);
   }
 }

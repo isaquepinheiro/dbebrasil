@@ -49,16 +49,17 @@ class DriverMysql1 extends DriverConnection {
   }
 
   @override
-  void executeScript(final String command) async {
-    await (factoryConnection.driverTransaction as DriverMysql1Transaction)
-        .transaction
-        .query(command);
+  void executeScript(final String command) {
+    executeDirect(command);
   }
 
   @override
-  void executeDirect(final String command, [final Params? params]) async {
-    await (factoryConnection.driverTransaction as DriverMysql1Transaction)
-        .transaction
-        .query(command);
+  void executeDirect(final String command, [final Params? params]) {
+    final DriverMysql1Transaction driverTransaction =
+        (factoryConnection.driverTransaction as DriverMysql1Transaction);
+
+    (driverTransaction.transaction == null)
+        ? factoryConnection.connection.query(command)
+        : driverTransaction.execute(command);
   }
 }

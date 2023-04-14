@@ -1,27 +1,28 @@
 import 'dart:async';
 import 'package:dbebr_core/dbebr_core.dart';
-import 'package:postgres/postgres.dart';
 
-import 'dbebr.driver.postgres.transaction.dart';
-import 'dbebr.factory.postgres.dart';
+import 'dbebr.driver.sqflite.transaction.dart';
+import 'dbebr.factory.sqflite.dart';
 
 // var connection = PostgreSQLConnection("localhost", 5432, "dart_test", username: "dart", password: "dart");
 // await connection.open();
 
-class DriverPostgres extends DriverConnection {
-  DriverPostgres({
+typedef SQFliteResult = List<Map<String, Object?>>;
+
+class DriverSqflite extends DriverConnection {
+  DriverSqflite({
     required this.factoryConnection,
   });
-  late final FactoryPostgres factoryConnection;
+  late final FactorySqflite factoryConnection;
 
   @override
-  DriverDatabase get driverDatabase => DriverDatabase.dnPostgreSQL;
+  DriverDatabase get driverDatabase => DriverDatabase.dnSQLite;
 
   @override
   void connect() async {
-    if (factoryConnection.connection.isClosed) {
+    if (factoryConnection.connection.isOpen) {
       try {
-        await factoryConnection.connection.open();
+        // await factoryConnection.connection.open();
       } catch (e) {
         throw DBEBrException('[ $runtimeType.connect() ]', e.toString());
       }
@@ -29,21 +30,25 @@ class DriverPostgres extends DriverConnection {
   }
 
   @override
-  void disconnect() async {}
+  void disconnect() async {
+    if (factoryConnection.connection.isOpen) {
+      factoryConnection.connection.close();
+    }
+  }
 
   @override
-  bool isConnected() => !factoryConnection.connection.isClosed;
+  bool isConnected() => !factoryConnection.connection.isOpen;
 
   @override
   Future<IResultSet> createResultSet(final String command) async {
-    final Future<IResultSet> result = _createResultSet(command).then(
-        (final value) => value.map((final row) => row.toColumnMap()).toList());
+    final Future<IResultSet> result =
+        _createResultSet(command).then((final value) => value.toList());
 
     return result;
   }
 
-  Future<PostgreSQLResult> _createResultSet(final String command) async {
-    final PostgreSQLResult query =
+  Future<SQFliteResult> _createResultSet(final String command) async {
+    final SQFliteResult query =
         await factoryConnection.connection.query(command);
 
     return query;
@@ -56,8 +61,8 @@ class DriverPostgres extends DriverConnection {
 
   @override
   void executeDirect(final String command, [final Params? params]) {
-    final DriverPostgresTransaction driverTransaction =
-        (factoryConnection.driverTransaction as DriverPostgresTransaction);
+    final DriverSqfliteTransaction driverTransaction =
+        (factoryConnection.driverTransaction as DriverSqfliteTransaction);
 
     (driverTransaction.transaction == null)
         ? factoryConnection.connection.execute(command)

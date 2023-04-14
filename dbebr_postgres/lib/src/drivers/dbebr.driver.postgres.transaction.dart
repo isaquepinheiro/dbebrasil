@@ -8,28 +8,21 @@ class DriverPostgresTransaction extends DriverTransaction {
     required this.factoryConnection,
   });
   late final FactoryPostgres factoryConnection;
-  late final PostgreSQLExecutionContext _transaction;
-  bool _inTransaction = false;
+  late PostgreSQLExecutionContext? _transaction;
 
-  PostgreSQLExecutionContext get transaction => _transaction;
+  PostgreSQLExecutionContext? get transaction => _transaction;
 
   @override
   void commitTransaction() {
-    if (!_inTransaction) {
-      _transaction.cancelTransaction();
-      _inTransaction = false;
-    }
+    _transaction = null;
   }
 
   @override
-  bool isInTransaction() => _inTransaction;
+  bool isInTransaction() => _transaction != null;
 
   @override
   void rollbackTransaction() {
-    if (!_inTransaction) {
-      _transaction.cancelTransaction();
-      _inTransaction = false;
-    }
+    _transaction = null;
   }
 
   @override
@@ -37,6 +30,9 @@ class DriverPostgresTransaction extends DriverTransaction {
     factoryConnection.connection.transaction((final transaction) async {
       _transaction = transaction;
     });
-    _inTransaction = true;
+  }
+
+  Future<void> execute(final String command) async {
+    await _transaction?.execute(command);
   }
 }
